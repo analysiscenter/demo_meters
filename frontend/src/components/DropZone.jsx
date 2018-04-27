@@ -26,7 +26,9 @@ export class DropZone extends React.Component {
         rejectClassName='dropzone reject'
         accept='image/jpeg, image/png' onDrop={this.onDrop.bind(this)}>
         <div className='drop-text'>
+          <div>
             Для загрузки нажмите или перетащите файл сюда. Допустимый формат jpeg или png.
+          </div>
         </div>
       </Dropzone>
     )

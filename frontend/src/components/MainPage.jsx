@@ -70,9 +70,7 @@ export default class MainPage extends React.Component {
   inferenceSpinner () {
     return (
       <div className='load-spinner'>
-        <div className='centered-loader'>
-          <div className='outer-circle' />
-        </div>
+        <div className='outer-circle' />
       </div>
     )
   }
@@ -123,13 +121,14 @@ export default class MainPage extends React.Component {
               </ul>
             </div>
           </Row>
-          <Row>
+          <Row className='input-zone'>
             {(this.state.inputSource !== null)
               ? this.inputZone()
               : null
             }
           </Row>
-          <Row>
+          <div className='grow-div' />
+          <Row className='center-view'>
             {(!this.state.uploadFailed)
               ? this.showResult()
               : <span className='load-error'>
