@@ -10,11 +10,30 @@ export class DropZone extends React.Component {
     let reader = new FileReader()
     reader.readAsDataURL(acceptedFiles.pop())
     reader.onload = function (e) {
-      that.props.mtStore.uploadImage(reader.result)
       var img = new Image()
       img.src = reader.result
       img.onload = function () {
-        that.props.handleNewImage(img)
+        if (Math.min(img.width, img.height) > 300) {
+          const factor = 300 / Math.min(img.width, img.height)
+          const width = img.width * factor
+          const height = img.height * factor         
+          const canvas = document.createElement('canvas')
+          canvas.width = width
+          canvas.height = height
+          const ctx = canvas.getContext('2d')
+          ctx.drawImage(img, 0, 0, width, height)
+          var url = canvas.toDataURL()
+          var imgReduced = new Image()
+          imgReduced.src = url
+          console.log(width, height)
+          imgReduced.onload = function () {
+            that.props.mtStore.uploadImage(imgReduced.src)
+            that.props.handleNewImage(imgReduced)
+          }
+        } else {
+          that.props.mtStore.uploadImage(reader.result)
+          that.props.handleNewImage(img)
+        }
       }
     }
   }
