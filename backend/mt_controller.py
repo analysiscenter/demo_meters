@@ -22,32 +22,32 @@ class MtController:
         self.uploaded_files_path = os.path.join(os.getcwd(), "uploaded_meters")
         self.meters_filenames = sorted(os.listdir(self.meters_path))
 
-        bbox_model_path = os.path.join(os.getcwd(), 'models', 'resnet_for_the_poor_last_epoch_iou69/')
-        digits_model_path = os.path.join(os.getcwd(), 'models', 'VGG7/')
+        # bbox_model_path = os.path.join(os.getcwd(), 'models', 'resnet_for_the_poor_last_epoch_iou69/')
+        # digits_model_path = os.path.join(os.getcwd(), 'models', 'VGG7/')
 
         self.output_shape = (500, 500)
 
         self.predict_pipeline = (Pipeline()
-                                    .init_model('static', TFModel, 'model',
-                                                 config={'load' : {'path' : bbox_model_path}, 'build': False})
-                                    .init_model('static', TFModel, 'VGG7',
-                                                 config={'load' : {'path' : digits_model_path}, 'build': False})
+                                   #  .init_model('static', TFModel, 'model',
+                                   #              config={'load' : {'path' : bbox_model_path}, 'build': False})
+                                   #  .init_model('static', TFModel, 'VGG7',
+                                   #              config={'load' : {'path' : digits_model_path}, 'build': False})
                                     .load(fmt='image', components='images')
                                     .resize((120, 120),  order=1, preserve_range=False,
                                             src='images', dst='resized_images')
-                                    .init_variable('bbox_predictions', init_on_each_run=0)
-                                    .predict_model('model', fetches=['predictions'],
-                                                   feed_dict={'images': B('resized_images')},
-                                                   save_to=[ B('pred_coordinates')])
-                                    .get_global_coordinates(src='pred_coordinates', img='images')
-                                    .update_variable('bbox_predictions', B('pred_coordinates'), mode='w')
-                                    .crop_from_bbox(src='images', component_coord="pred_coordinates")
-                                    .split_to_digits(n_digits=8)
-                                    .init_variable('labels', init_on_each_run=0)
-                                    .resize((64, 32),  order=1, preserve_range=False)
-                                    .predict_model('VGG7', fetches='output_labels',
-                                                   feed_dict={'images': B('images')},
-                                                   save_to=V('labels'))
+                                    .init_variable('bbox_predictions', init_on_each_run=9)
+                                   # .predict_model('model', fetches=['predictions'],
+                                   #                feed_dict={'images': B('resized_images')},
+                                   #                save_to=[ B('pred_coordinates')])
+                                   # .get_global_coordinates(src='pred_coordinates', img='images')
+                                   # .update_variable('bbox_predictions', B('pred_coordinates'), mode='w')
+                                   # .crop_from_bbox(src='images', component_coord="pred_coordinates")
+                                   # .split_to_digits(n_digits=8)
+                                    .init_variable('labels', init_on_each_run=-123)
+                                   # .resize((64, 32),  order=1, preserve_range=False)
+                                   # .predict_model('VGG7', fetches='output_labels',
+                                   #                feed_dict={'images': B('images')},
+                                   #                save_to=V('labels'))
                                     )
     def build_ds(self, path):
         print('BUILDING DATASET')
@@ -111,7 +111,8 @@ class MtController:
         pred.next_batch(1)
         print('got next batch')
         print('image.shape', image.shape[1::-1])
-        bbox = pred.get_variable('bbox_predictions')[0] * np.tile(self.output_shape, 2) / np.tile(image.shape[1::-1], 2)
+        bbox = pred.get_variable('bbox_predictions')[0]
+        # * np.tile(self.output_shape, 2) / np.tile(image.shape[1::-1], 2)
         labels = pred.get_variable('labels')
         inference = {"bbox": bbox.tolist(), "value": ''.join(map(str, labels))}
         data["inference"] = inference
