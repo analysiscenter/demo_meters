@@ -104,6 +104,36 @@ export default class MainPage extends React.Component {
     }
   }
 
+  checkActiveSource (src) {
+    if (src === 'gallery') {
+      if (this.state.inputSource === 'gallery' | this.state.inputSource === null) {
+        return 'one-active'
+      }
+      else
+      {
+        return 'one'
+      }
+    }
+    if (src === 'file') {
+      if (this.state.inputSource === 'file') {
+        return 'two-active'
+      }
+      else
+      {
+        return 'two'
+      }
+    }
+    if (src === 'url') {
+      if (this.state.inputSource === 'url') {
+        return 'three-active'
+      }
+      else
+      {
+        return 'three'
+      }
+    }
+  }
+
   render () {
     return (
       <div className='page'>
@@ -114,9 +144,9 @@ export default class MainPage extends React.Component {
           <Row>
             <div className='container centered-text'>
               <ul>
-                <li className='one'><a href='#' onClick={() => { this.setInputSource('gallery') }}>Галерея счетчиков</a></li>
-                <li className='two'><a href='#' onClick={() => { this.setInputSource('file') }}>Выбрать из файла</a></li>
-                <li className='three'><a href='#' onClick={() => { this.setInputSource('url') }}>Загрузить по ссылке</a></li>
+                <li className={this.checkActiveSource('gallery')}><a href='#' onClick={() => { this.setInputSource('gallery') }}>Галерея счетчиков</a></li>
+                <li className={this.checkActiveSource('file')}><a href='#' onClick={() => { this.setInputSource('file') }}>Выбрать из файла</a></li>
+                <li className={this.checkActiveSource('url')}><a href='#' onClick={() => { this.setInputSource('url') }}>Загрузить по ссылке</a></li>
                 <hr />
               </ul>
             </div>

@@ -112,11 +112,27 @@ ul li {
   color: #333;
 }
 
+.one:hover ~ hr {
+  margin-left: 0;
+}
+
+.one-active ~ hr {
+  margin-left: 0;
+}
+
 .two:hover ~ hr {
   margin-left: 33%;
 }
 
+.two-active ~ hr {
+  margin-left: 33%;
+}
+
 .three:hover ~ hr {
+  margin-left: 66%;
+}
+
+.three-active ~ hr {
   margin-left: 66%;
 }
 
