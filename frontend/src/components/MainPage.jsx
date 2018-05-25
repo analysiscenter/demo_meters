@@ -13,7 +13,7 @@ export default class MainPage extends React.Component {
     super(props)
 
     this.state = {
-      inputSource: null,
+      inputSource: 'gallery',
       showId: null,
       uploadedTotal: 0,
       uploadFailed: false
